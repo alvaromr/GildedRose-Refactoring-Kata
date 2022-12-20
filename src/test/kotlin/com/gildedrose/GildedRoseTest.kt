@@ -209,4 +209,37 @@ internal class GildedRoseTest {
     }
 
     //TODO: add missing tests for Conjured Items
+
+    @Test
+    fun `conjured item quality decreases by two before its sellIn`() {
+        val initialSellIn = 10
+        val item = createTestItem(
+            name = "Conjured Mana Cake",
+            sellIn = initialSellIn,
+            quality = 10 * initialSellIn
+        )
+        val app = GildedRose(item)
+        val initialQuality = item.quality
+        val days = initialSellIn.randomize()
+        app.advanceTimeBy(days)
+        assertEquals(initialQuality - 2 * days, item.quality)
+    }
+
+    @Test
+    fun `conjured item quality decreases by four after its sellIn`() {
+        val initialSellIn = 1
+        val item = createTestItem(
+            name = "Conjured Mana Cake",
+            sellIn = initialSellIn,
+            quality = 40 * initialSellIn
+        )
+        val app = GildedRose(item)
+        val initialQuality = item.quality
+        app.advanceTimeBy(initialSellIn)
+        val qualityAfterSellIn = item.quality
+        assertEquals(initialQuality - 2 * initialSellIn, qualityAfterSellIn)
+        val days = initialSellIn.randomize()
+        app.advanceTimeBy(days)
+        assertEquals(qualityAfterSellIn - 4 * days, item.quality)
+    }
 }
